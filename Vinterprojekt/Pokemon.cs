@@ -3,12 +3,12 @@ public class Pokemon
     public List<Move> Moves = [];
     string[] Types;
     float _maxHP = 100;
-    float _hp;
-    float _speed;
-    float _defense;
-    float _attack;
-    float _specialDefense;
-    float _specialAttack;
+    float _hp = 100;
+    float _speed = 100;
+    float _defense = 100;
+    float _attack = 100;
+    float _specialDefense = 100;
+    float _specialAttack = 100;
     public float HP
     {
         get
@@ -112,14 +112,16 @@ public class Pokemon
     public Dictionary<string, float> StatBoosts = [];
     float CalculateDMG(Move move, Pokemon attacker, Pokemon target)
     {
-        float DmgToDeal=move.Power*attacker.Attack/target.Defense;
+        float DmgToDeal;
+        if(move.IsSpecial) DmgToDeal=move.Power*attacker.SpecialAttack/target.SpecialDefense; else DmgToDeal=move.Power*attacker.Attack/target.Defense;
+        Console.WriteLine(DmgToDeal);
         return DmgToDeal;
     }
-    public void UseMove(Move move, Pokemon attacker, Pokemon target)
+    public void UseMove(Move move, Pokemon target)
     {
         if(move.Power!=0)
         {
-            CalculateDMG(move, attacker, target);
+            target.HP-=CalculateDMG(move, this, target);
         }
         else if(move.GetType().ToString()=="StatboostMove")
 
@@ -146,13 +148,16 @@ public class Pokemon
     {
         float[] StatModifiers = [1f/4, 2f/7, 1f/3, 2f/5, 1f/2, 2f/3, 1f, 3f/2, 2f, 5f/2, 3f, 7f/2, 4f];
         float Modifier = StatModifiers[Math.Clamp(boostIndex,-6,6)+6];
-        Console.WriteLine("Modifiers: ");
-        foreach (float stat in StatModifiers)
-        {
-            Console.WriteLine(stat);
-        }
-    
-
         return Modifier;
+    }
+    public void GetStats()
+    {
+        Console.WriteLine($"MaxHP: {_maxHP}");
+        Console.WriteLine($"HP: {HP}");
+        Console.WriteLine($"Speed: {Speed}");
+        Console.WriteLine($"Attack: {Attack}");
+        Console.WriteLine($"Defense: {Defense}");
+        Console.WriteLine($"Special Attack: {SpecialAttack}");
+        Console.WriteLine($"Special Defense: {SpecialDefense}\n");
     }
 }
