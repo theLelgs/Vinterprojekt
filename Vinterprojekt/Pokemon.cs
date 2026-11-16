@@ -1,7 +1,8 @@
 public class Pokemon
 {
+    public static TypeHandler typeHandler = new();
     public List<Move> Moves = [];
-    string[] Types;
+    public string[] Types;
     float _maxHP = 100;
     float _hp = 100;
     float _speed = 100;
@@ -109,11 +110,13 @@ public class Pokemon
             _specialAttack=value;
         }
     }
+    
     public Dictionary<string, float> StatBoosts = [];
     float CalculateDMG(Move move, Pokemon attacker, Pokemon target)
     {
         float DmgToDeal;
         if(move.IsSpecial) DmgToDeal=move.Power*attacker.SpecialAttack/target.SpecialDefense; else DmgToDeal=move.Power*attacker.Attack/target.Defense;
+        DmgToDeal*=CalculateTypeBonus(target, move);
         Console.WriteLine(DmgToDeal);
         return DmgToDeal;
     }
@@ -159,5 +162,15 @@ public class Pokemon
         Console.WriteLine($"Defense: {Defense}");
         Console.WriteLine($"Special Attack: {SpecialAttack}");
         Console.WriteLine($"Special Defense: {SpecialDefense}\n");
+    }
+    float CalculateTypeBonus(Pokemon target, Move move)
+    {
+        float BaseMult = 1;
+        foreach (string type in target.Types)
+        {
+            BaseMult *= typeHandler.TypeEfficiency[typeHandler.Parse(type), typeHandler.Parse(move.Type)];
+        }
+        Console.WriteLine("Effectiveness: " + BaseMult);
+        return BaseMult;
     }
 }

@@ -7,12 +7,12 @@ StatboostMove TestMove = new(){
     StatboostPairings=new Dictionary<string, int>(){{"attack", 1}}
 };
 Move Attackmove = new(){
-    Power=10
+    Power=10,
+    Type="Electric"
 };
 Pokemon test = new(){
     Moves=[TestMove, Attackmove],
-    Speed=100,
-    Defense=100
+    Types= ["Water", "Flying"]
 };
 
 int Turncount = 1;
@@ -24,5 +24,7 @@ while (test.HP!=0)
     test.GetStats();
     Turncount++;
 }
-
+TypeHandler testing = new();
+if(testing.Test().ParseSucceeded) Console.WriteLine(testing.Test().TypeInteger);
+Console.WriteLine("Test: " + Pokemon.typeHandler.TypeEfficiency[1,2]);
 Console.ReadLine();
